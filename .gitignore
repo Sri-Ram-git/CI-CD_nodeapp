@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# environment variables
+.env
+.env.local
+.env.*.local
+
+# secrets / config
+*.pem
+*.key
+*.cert
+
+# logs
+*.log
+npm-debug.log*
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# binary artifacts
+*.tar
+*.gz
