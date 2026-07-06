@@ -1,15 +1,31 @@
 {
   "name": "ci-cd_nodeapp",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/app.js",
+    "dev": "NODE_ENV=development node src/app.js",
+    "test": "jest --coverage --forceExit",
+    "lint": "eslint src/ tests/",
+    "format": "prettier --write \"src/**/*.js\" \"tests/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"tests/**/*.js\"",
+    "audit": "npm audit --audit-level=high",
+    "docker:build": "docker build -t mrsridoc/node-ci-app .",
+    "docker:run": "docker run -p 3000:3000 mrsridoc/node-ci-app"
   },
-  "keywords": [],
+  "keywords": ["devops", "ci-cd", "docker", "github-actions"],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Enterprise CI/CD Pipeline with Automated Rollback",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pino": "^9.0.0",
+    "pino-pretty": "^11.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.0"
   }
 }

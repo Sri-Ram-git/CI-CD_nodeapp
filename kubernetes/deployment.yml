@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ci-cd-nodeapp
+  labels:
+    app: ci-cd-nodeapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ci-cd-nodeapp
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: ci-cd-nodeapp
+    spec:
+      containers:
+        - name: app
+          image: mrsridoc/node-ci-app:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3000"
+            - name: APP_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['version']
+            - name: LOG_LEVEL
+              value: "info"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ci-cd-nodeapp
+  labels:
+    app: ci-cd-nodeapp
+spec:
+  selector:
+    app: ci-cd-nodeapp
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: LoadBalancer
